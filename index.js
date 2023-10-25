@@ -1,4 +1,4 @@
-// backend database index.js file 
+// backend database index.js file
 
 const express = require("express");
 const cors = require("cors");
@@ -30,30 +30,30 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const cartItemCollection = client.db('cartItemDB').collection('mycart')
+    const cartItemCollection = client.db("cartItemDB").collection("mycart");
 
-    app.get('/mycart', async(req, res) => {
+    app.get("/mycart", async (req, res) => {
       const cursor = cartItemCollection.find();
       const result = await cursor.toArray();
       res.send(result);
-    })
+    });
 
-    app.post('/mycart', async(req, res) =>{
+    app.post("/mycart", async (req, res) => {
       const cartItem = req.body;
       console.log(cartItem);
       const result = await cartItemCollection.insertOne(cartItem);
-      res.send(result); 
-    })
+      res.send(result);
+    });
 
-    app.delete('/mycart/:id', async(req, res) => {
+    app.delete("/mycart/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: id}
+      const query = { _id: id };
       const result = await cartItemCollection.deleteOne(query);
       res.send(result);
-    })
+    });
 
     const productCollection = client.db("productDB").collection("product");
-    const userCollection = client.db('productDB').collection('user');
+    const userCollection = client.db("productDB").collection("user");
 
     app.get("/product", async (req, res) => {
       const cursor = productCollection.find();
@@ -110,20 +110,20 @@ async function run() {
     });
 
     // user apis
-    app.get('/users', async(req, res) => {
+    app.get("/users", async (req, res) => {
       const cursor = userCollection.find();
       const users = await cursor.toArray();
       res.send(users);
-    })
+    });
 
-    app.post('/users', async(req, res) => {
+    app.post("/users", async (req, res) => {
       const users = req.body;
       console.log(users);
       const result = await userCollection.insertOne(users);
       res.send(result);
-    })
+    });
 
-    app.delete('/users/:id', async (req, res) => {
+    app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await userCollection.deleteOne(query);
@@ -132,12 +132,11 @@ async function run() {
 
     app.get("/products", async (req, res) => {
       const { brand } = req.query;
-    
+
       // Fetch products filtered by brand from the database
       const products = await productCollection.find({ brand }).toArray();
       res.send(products);
     });
-    
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
