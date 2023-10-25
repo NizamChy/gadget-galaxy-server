@@ -30,6 +30,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    // creating database for cart item collection
     const cartItemCollection = client.db("cartItemDB").collection("mycart");
 
     app.get("/mycart", async (req, res) => {
